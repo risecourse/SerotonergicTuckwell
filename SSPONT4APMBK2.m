@@ -379,15 +379,19 @@ x(8,k+1)=x(8,k) + DT*(HINFCAL(x(1,k))-x(8,k))/TAUHCAL;
 x(9,k+1)=x(9,k) + DT*(MINFCAN(x(1,k))-x(9,k))/ TAUMCAN(x(1,k)); 
 x(12,k+1) = x(12,k) + DT*(HINFCAN(x(1,k)) - x(12,k))/TAUHCAN; 
 
-% x(10,k+1)=x(10,k) + DT*(MINFKA1(x(1,k))-x(10,k))/TAUMKA1(x(1,k)); 
+x(10,k+1)=x(10,k) + DT*(MINFKA1(x(1,k))-x(10,k))/TAUMKA1(x(1,k)); 
 % x(10,k+1)=x(10,k) + DT*(MINFKA1(x(1,k))-x(10,k))/1; 
-x(10,k+1)=x(10,k) + DT*(MINFKA1(x(1,k))-x(10,k))/TAUMKAHM(x(1,k)); 
+
+
+%ALTERED  
+% x(10,k+1)=x(10,k) + DT*(MINFKA1(x(1,k))-x(10,k))/TAUMKAHM(x(1,k)); 
 
 
 
-% x(11,k+1)=x(11,k) + DT*(HINFKA1(x(1,k))-x(11,k))/TAUHKA1(x(1,k)); 
+x(11,k+1)=x(11,k) + DT*(HINFKA1(x(1,k))-x(11,k))/TAUHKA1(x(1,k)); 
 % x(11,k+1)=x(11,k) + DT*(HINFKA1(x(1,k))-x(11,k))/10; 
-x(11,k+1)=x(11,k) + DT*(HINFKA1(x(1,k))-x(11,k))/TAUHKAHM(x(1,k)); 
+
+% x(11,k+1)=x(11,k) + DT*(HINFKA1(x(1,k))-x(11,k))/TAUHKAHM(x(1,k)); 
 
 % x(13,k+1)=x(13,k) + DT*(MINFBK(x(1,k))-x(13,k))/TAUBK; 
 
@@ -412,15 +416,15 @@ if x(1,k)<-30 & x(1,k+1) >-30
     kountdown=kountdown+1;
        T1(kountdown)=(k+1)*DT;
          V1(kountdown)=x(1,k+1);
-end
-if x(1,k)<-1 & x(1,k+1)>-1
-   kountup=kountup+1;
-   T2(kountup)=(k+1)*DT;
-     V2(kountup)=x(1,k+1);
-end
-if kountup >0 &  kountdown>0
-     UPSLOPE(kountdown)= (V2(kountup)-V1(kountdown))/(T2(kountup)-T1(kountdown)); 
- end
+   end
+       if x(1,k)<-1 & x(1,k+1)>-1
+           kountup=kountup+1;
+           T2(kountup)=(k+1)*DT;
+             V2(kountup)=x(1,k+1);
+       end
+       if kountup >0 &  kountdown>0
+             UPSLOPE(kountdown)= (V2(kountup)-V1(kountdown))/(T2(kountup)-T1(kountdown)); 
+         end
 
 if k >1 & x(1,k-1) < -40 & x(1,k) > -40
     countup=countup +1;
@@ -745,8 +749,14 @@ x(8,k+1)=x(8,k) + DT*(HINFCAL(x(1,k))-x(8,k))/TAUHCAL;
 x(9,k+1)=x(9,k) + DT*(MINFCAN(x(1,k))-x(9,k))/ TAUMCAN(x(1,k)); 
 
 x(12,k+1) = x(12,k) + DT*(HINFCAN(x(1,k)) - x(12,k))/TAUHCAN; 
+
+
 x(10,k+1)=x(10,k) + DT*(MINFKA1(x(1,k))-x(10,k))/TAUMKA1(x(1,k)); 
 x(11,k+1)=x(11,k) + DT*(HINFKA1(x(1,k))-x(11,k))/TAUHKA1(x(1,k)); 
+
+% x(10,k+1)=x(10,k) + DT*(MINFKA1(x(1,k))-x(10,k))/TAUMKAHM(x(1,k)); 
+% x(11,k+1)=x(11,k) + DT*(HINFKA1(x(1,k))-x(11,k))/TAUHKAHM(x(1,k)); 
+
 
 % x(13,k+1)=x(13,k) + DT*(MINFBK(x(1,k))-x(13,k))/TAUBK; 
 
@@ -1169,29 +1179,31 @@ axis([-90 30   -.25  .15])
        
   DURATION = DY-TV;
     ISI= diff(DY);
+
+
+    mean(DURATION)
+    mean(ISI)
     try
      UPSLOPE; 
       mean(UPSLOPE)
     catch
         disp('No UPSLOPE variable defined')
     end
-    mean(DURATION)
-    mean(ISI)
-
 
     
     
     
-    
+load gong % train gong laughter handel
+sound(y,Fs)    
 
- cf = 500;                  % carrier frequency (Hz)
-sf = 22050;                 % sample frequency (Hz)
-d = 1.0;                    % duration (s)
-n = sf * d;                 % number of samples
-s = (1:n) / sf;             % sound data preparation
-s = sin(2 * pi * cf * s);   % sinusoidal modulation
-sound(s, sf);               % sound presentation
-pause(d + 0.5);             % waiting for sound end
+%  cf = 500;                  % carrier frequency (Hz)
+% sf = 22050;                 % sample frequency (Hz)
+% d = 1.0;                    % duration (s)
+% n = sf * d;                 % number of samples
+% s = (1:n) / sf;             % sound data preparation
+% s = sin(2 * pi * cf * s);   % sinusoidal modulation
+% sound(s, sf);               % sound presentation
+% pause(d + 0.5);             % waiting for sound end
 
 
     toc
